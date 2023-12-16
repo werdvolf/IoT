@@ -1,3 +1,5 @@
+import express from 'express'
+import cors from 'cors'
 import {
   ModbusFunctions,
   ModbusConnectionSettings,
@@ -5,8 +7,6 @@ import {
   ModbusWriteParameters,
 } from './modbusFunctions'
 
-const cors = require('cors')
-const express = require('express')
 const app = express()
 app.use(express.json())
 app.use(cors())
