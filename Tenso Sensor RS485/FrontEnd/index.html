@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Modbus connection</title>
+    <style>
+      body {
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+        color: #333;
+      }
+
+      .container {
+        max-width: 600px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+      }
+
+      h1 {
+        color: #007bff;
+      }
+
+      form {
+        display: flex;
+        flex-direction: column;
+      }
+
+      label {
+        margin-top: 10px;
+        margin-bottom: 5px;
+        color: #555;
+      }
+
+      select,
+      input[type='text'],
+      input[type='number'] {
+        margin-bottom: 15px;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+        width: 100%;
+      }
+
+      input[type='button'] {
+        background-color: #007bff;
+        color: #fff;
+        padding: 10px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      input[type='button']:hover {
+        background-color: #0056b3;
+      }
+
+      #output {
+        margin: auto;
+        margin-top: 20px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        background-color: #eee;
+        height: 200px; /* Fixed height */
+        max-width: 600px; /* Fixed width */
+        overflow: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <script src="index.js"></script>
+    <div class="container">
+      <h1>Read</h1>
+      <form action="">
+        <label for="read">Choose read function:</label>
+        <select id="readFunction" name="read">
+          <option value="readCoils">Read Coils</option>
+          <option value="readDiscreteInputs">Read Discrete Inputs</option>
+          <option value="readHoldingRegisters">Read Holding Registers</option>
+          <option value="readInputRegisters">Read Input Registers</option>
+        </select>
+        <label for="nodeIds">Node IDs:</label>
+        <input
+          type="text"
+          id="nodeIdsRead"
+          name="nodeIds"
+          placeholder="Enter node IDs (comma-separated)"
+        />
+
+        <label for="address">Address:</label>
+        <input
+          type="number"
+          id="addressRead"
+          name="address"
+          placeholder="Enter address"
+        />
+
+        <label for="quantity">Quantity:</label>
+        <input
+          type="number"
+          id="quantityRead"
+          name="quantity"
+          placeholder="Enter quantity"
+        />
+
+        <input type="button" onclick="performRead()" value="Submit" />
+      </form>
+    </div>
+
+    <div class="container">
+      <h1>Write</h1>
+      <form action="">
+        <label for="write">Choose write function:</label>
+        <select id="writeFunction" name="write">
+          <option value="writeSingleCoil">Write Single Coil</option>
+          <option value="writeSingleRegister">Write Single Register</option>
+          <option value="writeMultipleRegisters">
+            Write Multiple Registers
+          </option>
+        </select>
+        <label for="nodeIds">Node IDs:</label>
+        <input
+          type="text"
+          id="nodeIdsWrite"
+          name="nodeIds"
+          placeholder="Enter node IDs (comma-separated)"
+        />
+
+        <label for="address">Address:</label>
+        <input
+          type="text"
+          id="addressWrite"
+          name="address"
+          placeholder="Enter adress"
+        />
+
+        <label for="values">Values:</label>
+        <input
+          type="text"
+          id="valuesWrite"
+          name="values"
+          placeholder="Enter Values"
+        />
+        <input type="button" onclick="performWrite()" value="Submit" />
+      </form>
+    </div>
+    <div id="output">
+      <!-- Output will be displayed here -->
+    </div>
+  </body>
+</html>
