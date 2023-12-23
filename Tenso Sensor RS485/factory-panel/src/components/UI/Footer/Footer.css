@@ -1,0 +1,30 @@
+.footer-row {
+  display: flex;
+  height: 25px; /* Increased height for better visibility */
+  background-color: #dbd8e3; /* Darker background color */
+  color: #ffffff;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  padding: 0 20px;
+  /* border-top: 2px solid #444 */
+}
+
+.footer-column {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  vertical-align: middle;
+  text-align: center;
+  padding: 10px; /* Padding for better spacing */
+}
+
+.footer-text {
+  color: black; /* Lighter color for subtlety */
+  display: inline;
+  margin: 0 10px;
+  transition: color 0.3s; /* Smooth color transition on hover */
+  font-size: small;
+}

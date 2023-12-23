@@ -19,7 +19,7 @@ export interface ModbusRequestParameters {
 export interface ModbusWriteParameters {
   nodeIds: number[]
   address: number
-  values: number[] | boolean
+  values: string | boolean[] | number
 }
 
 export class ModbusFunctions {
@@ -187,6 +187,15 @@ export class ModbusFunctions {
     settings: ModbusConnectionSettings,
   ): Promise<any> {
     return await this.connectAndPerformOperation(settings, async () => {
+      // const paramsBoolArray = Array.from({ length: 8 }).map((_, index) => {
+      //   return (
+      //     params.address === index &&
+      //     (params.values[0] === '1' || params.values[0] === true)
+      //   )
+      // })
+      // console.log(paramsBoolArray)
+      // params.values = paramsBoolArray
+      params.values = 0
       return await this.performWriteOperation(
         params,
         this.client.writeCoil.bind(this.client),

@@ -37,33 +37,13 @@ app.post('/modbusRead', async (req, res) => {
       }
     }
     // Perform the Modbus function based on the provided type
-    switch (readFunction) {
-      case 'readHoldingRegisters':
-        modbusData = await modbusFunctions.readHoldingRegisters(
-          requestParameters,
-          connectionSettings,
-        )
-        break
-      case 'readCoils':
-        modbusData = await modbusFunctions.readCoils(
-          requestParameters,
-          connectionSettings,
-        )
-        break
-      case 'readInputRegisters':
-        modbusData = await modbusFunctions.readCoils(
-          requestParameters,
-          connectionSettings,
-        )
-        break
-      case 'readDiscreteInputs':
-        modbusData = await modbusFunctions.readCoils(
-          requestParameters,
-          connectionSettings,
-        )
-        break
-      default:
-        throw new Error('Invalid Modbus function type')
+    try {
+      modbusData = await modbusFunctions[readFunction](
+        requestParameters,
+        connectionSettings,
+      )
+    } catch (error) {
+      throw new Error('Invalid Modbus function type')
     }
 
     res.json({
@@ -96,26 +76,13 @@ app.post('/modbusWrite', async (req, res) => {
       }
     }
     // Perform the Modbus function based on the provided type
-    switch (writeFunction) {
-      case 'writeSingleCoil':
-        modbusData = await modbusFunctions.writeSingleCoil(
-          requestParameters,
-          connectionSettings,
-        )
-        break
-      case 'writeSingleRegister':
-        modbusData = await modbusFunctions.writeMultipleRegisters(
-          requestParameters,
-          connectionSettings,
-        )
-      case 'writeMultipleRegisters':
-        modbusData = await modbusFunctions.writeMultipleRegisters(
-          requestParameters,
-          connectionSettings,
-        )
-        break
-      default:
-        throw new Error('Invalid Modbus function type')
+    try {
+      modbusData = await modbusFunctions[writeFunction](
+        requestParameters,
+        connectionSettings,
+      )
+    } catch (error) {
+      throw new Error('Invalid Modbus function type')
     }
 
     res.json({
