@@ -1,41 +1,63 @@
-import React, { useContext, ReactNode } from 'react'
-import PropTypes from 'prop-types'
-import './SideMenu.css'
-import { MenuContext } from '../../../context/navState'
+import React from 'react'
+import {
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+} from '@mui/material'
+import { Link } from 'react-router-dom'
 
-type SideMenuProps = {
-  children?: ReactNode
+interface MenuItem {
+  name: string
+  icon: JSX.Element
+  link: string
 }
 
-export const SideMenu: React.FC<SideMenuProps> = ({ children }) => {
-  const { isMenuOpen } = useContext(MenuContext)
+interface SideMenuProps {
+  menuItems: { [key: string]: MenuItem }
+  open: boolean
+}
+
+const SideMenu: React.FC<SideMenuProps> = ({ menuItems, open }) => {
+  const renderListItem = (name: string, icon: JSX.Element, link: string) => (
+    <ListItem key={name} disablePadding>
+      <Link
+        to={link}
+        style={{ textDecoration: 'none', color: 'inherit', width: '100%' }}
+      >
+        <ListItemButton
+          component="div" // Ensure this is a div, not a button, to avoid conflicts
+          sx={{
+            minHeight: 48,
+            justifyContent: open ? 'initial' : 'center',
+            px: 2.5,
+            width: '100%', // Make the entire button clickable
+          }}
+        >
+          <ListItemIcon
+            sx={{
+              minWidth: 0,
+              mr: open ? 3 : 'auto',
+              justifyContent: 'center',
+            }}
+          >
+            {icon}
+          </ListItemIcon>
+          <ListItemText primary={name} sx={{ opacity: open ? 1 : 0 }} />
+        </ListItemButton>
+      </Link>
+    </ListItem>
+  )
 
   return (
-    <nav className={isMenuOpen ? 'menu-open' : 'menu-closed'}>{children}</nav>
+    <List>
+      {Object.keys(menuItems).map(key => {
+        const menuItem = menuItems[key]
+        return renderListItem(menuItem.name, menuItem.icon, menuItem.link)
+      })}
+    </List>
   )
-}
-
-SideMenu.propTypes = {
-  children: PropTypes.node,
-}
-
-SideMenu.defaultProps = {
-  children: (
-    <>
-      <a href="/" className="menu-link">
-        Головна
-      </a>
-      <a href="/screen" className="menu-link">
-        Екран
-      </a>
-      <a href="/reports" className="menu-link">
-        Звіти
-      </a>
-      <a href="/accidents" className="menu-link">
-        Аварії
-      </a>
-    </>
-  ),
 }
 
 export default SideMenu
