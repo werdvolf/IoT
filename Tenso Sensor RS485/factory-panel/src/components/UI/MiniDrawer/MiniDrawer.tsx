@@ -1,5 +1,4 @@
 import * as React from 'react'
-import SideMenu from '../SideMenu/SideMenu'
 import { styled, useTheme, Theme, CSSObject } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import MuiDrawer from '@mui/material/Drawer'
@@ -10,12 +9,16 @@ import Typography from '@mui/material/Typography'
 import Divider from '@mui/material/Divider'
 import IconButton from '@mui/material/IconButton'
 import MenuIcon from '@mui/icons-material/Menu'
+
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
 import ChevronRightIcon from '@mui/icons-material/ChevronRight'
 import AssessmentIcon from '@mui/icons-material/Assessment'
 import ReportProblemIcon from '@mui/icons-material/ReportProblem'
 import WebAssetIcon from '@mui/icons-material/WebAsset'
+import NoteAddIcon from '@mui/icons-material/NoteAdd'
+
 import { Outlet } from 'react-router-dom'
+import SideMenu from '../SideMenu/SideMenu'
 
 const drawerWidth = 240
 
@@ -29,6 +32,11 @@ const sideMenuOptions = {
     name: 'Аварії',
     icon: <ReportProblemIcon />,
     link: '/accidents',
+  },
+  recipe: {
+    name: 'Рецепти',
+    icon: <NoteAddIcon />,
+    link: '/recipe',
   },
   reports: {
     name: 'Звіти',
@@ -106,7 +114,7 @@ const Drawer = styled(MuiDrawer, {
   }),
 }))
 
-const MiniDrawer = () => {
+export default function MiniDrawer() {
   const theme = useTheme()
   const [open, setOpen] = React.useState(false)
 
@@ -151,7 +159,7 @@ const MiniDrawer = () => {
           </IconButton>
         </DrawerHeader>
         <Divider />
-        <SideMenu menuItems={sideMenuOptions} open={true} />;
+        <SideMenu menuItems={sideMenuOptions} open={true} />
         <Divider />
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
@@ -161,5 +169,3 @@ const MiniDrawer = () => {
     </Box>
   )
 }
-
-export default MiniDrawer
