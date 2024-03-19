@@ -6,7 +6,7 @@ import routes from './src/routes'
 import WebSocketService from './src/services/wsService'
 
 const corsOptions = {
-  origin: 'http://127.0.0.1:5173',
+  origin: 'http://localhost:5173',
   optionsSuccessStatus: 200,
 }
 
