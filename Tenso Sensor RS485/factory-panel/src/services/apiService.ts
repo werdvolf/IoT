@@ -1,5 +1,4 @@
 import axios, { AxiosResponse } from 'axios'
-
 const baseUrl = 'http://localhost:3000/'
 
 class ApiService {
@@ -27,6 +26,15 @@ class ApiService {
       const response: AxiosResponse = await axios.post(baseUrl + url, body, {
         headers,
       })
+      return response.data
+    } catch (error) {
+      handleApiError(error)
+      throw error // Re-throw the error after handling
+    }
+  }
+  static async deleteRequest(url: string): Promise<any> {
+    try {
+      const response: AxiosResponse = await axios.delete(baseUrl + url)
       return response.data
     } catch (error) {
       handleApiError(error)
