@@ -8,7 +8,7 @@ interface RecipeCardProps {
   rows: readonly HeadCell[]
 }
 
-const RecipeCard = ({ rows }: RecipeCardProps) => {
+export const RecipeCard = ({ rows }: RecipeCardProps) => {
   const { control, watch } = useFormContext()
   const [validComponentCount, setValidComponentCount] = useState<number>(0)
 
@@ -70,5 +70,3 @@ const RecipeCard = ({ rows }: RecipeCardProps) => {
     </Grid>
   )
 }
-
-export default RecipeCard

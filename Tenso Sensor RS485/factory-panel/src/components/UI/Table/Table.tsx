@@ -1,4 +1,4 @@
-import { ReactElement, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 
 import Box from '@mui/material/Box'
 import Paper from '@mui/material/Paper'
@@ -19,16 +19,15 @@ import { HeadCell } from '../../Data/HeadCell'
 import { Row } from '../../Data/TableRows'
 
 import CustomButton from '../CustomButton/CustomButton'
-import CustomModal from '../Modal/CustomModal'
 
 import styles from './Table.module.css'
 
-interface TableProps {
+interface IProps {
   title: string
   headCells: readonly HeadCell[]
   rows: Row[]
-  addRowModal?: ReactElement
-  editRowModal?: ReactElement
+  addRowAction?: () => void
+  editRowAction?: (row: Row) => void
   deleteRowAction?: (id: number) => void
 }
 
@@ -36,10 +35,10 @@ const CustomTable = ({
   title,
   headCells,
   rows,
-  addRowModal,
-  editRowModal,
+  addRowAction,
+  editRowAction,
   deleteRowAction,
-}: TableProps) => {
+}: IProps) => {
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(5)
 
@@ -55,8 +54,8 @@ const CustomTable = ({
   }
 
   const isActionsPresent = useMemo(
-    () => !!deleteRowAction || !!editRowModal,
-    [editRowModal, deleteRowAction],
+    () => !!deleteRowAction || !!editRowAction,
+    [editRowAction, deleteRowAction],
   )
 
   const renderRow = (row: Row, index: number) => {
@@ -82,18 +81,12 @@ const CustomTable = ({
 
         {isActionsPresent && (
           <TableCell className={styles.actions}>
-            {!!editRowModal && (
-              <CustomModal
-                openModalButton={
-                  <CustomButton
-                    buttonIcon={<EditIcon />}
-                    type="submit"
-                  />
-                }
-                title="Редагувати"
-              >
-                {editRowModal}
-              </CustomModal>
+            {!!editRowAction && (
+              <CustomButton
+                buttonIcon={<EditIcon />}
+                type="submit"
+                onClick={() => editRowAction(row)}
+              />
             )}
             {!!deleteRowAction && (
               <CustomButton
@@ -127,19 +120,13 @@ const CustomTable = ({
         <Typography variant="h5" mb={2}>
           {title}
         </Typography>
-        {addRowModal && (
-          <CustomModal
-            openModalButton={
-              <CustomButton
-                buttonIcon={<AddIcon />}
-                buttonText="Додати"
-                type="submit"
-              ></CustomButton>
-            }
-            title="Створити"
-          >
-            {addRowModal}
-          </CustomModal>
+        {addRowAction && (
+          <CustomButton
+            buttonIcon={<AddIcon />}
+            buttonText="Додати"
+            type="submit"
+            onClick={addRowAction}
+          />
         )}
         {rows.length === 0 ? (
           <Typography variant="body1" mt={2}>

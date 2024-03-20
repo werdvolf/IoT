@@ -1,4 +1,4 @@
-import React, { ReactElement, useState } from 'react'
+import { ReactElement } from 'react'
 
 import Box from '@mui/material/Box'
 import Modal from '@mui/material/Modal'
@@ -17,42 +17,37 @@ const style = {
 }
 
 interface CustomModalProps {
+  isOpen: boolean
+  handleClose(): void
   title: string
   children: ReactElement
-  openModalButton: ReactElement
 }
 
 const CustomModal = ({
+  isOpen,
+  handleClose,
   title,
   children,
-  openModalButton,
 }: CustomModalProps) => {
-  const [open, setOpen] = useState(false)
-  const handleOpen = () => setOpen(true)
-  const handleClose = () => setOpen(false)
-
   return (
-    <div>
-      {React.cloneElement(openModalButton, { onClick: handleOpen })}
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>
-          <Typography
-            id="modal-modal-title"
-            sx={{ textAlign: 'center' }}
-            variant="h6"
-            component="h2"
-          >
-            {title}
-          </Typography>
-          {React.cloneElement(children, { onClose: handleClose })}
-        </Box>
-      </Modal>
-    </div>
+    <Modal
+      open={isOpen}
+      onClose={handleClose}
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
+    >
+      <Box sx={style}>
+        <Typography
+          id="modal-modal-title"
+          sx={{ textAlign: 'center' }}
+          variant="h6"
+          component="h2"
+        >
+          {title}
+        </Typography>
+        {children}
+      </Box>
+    </Modal>
   )
 }
 
