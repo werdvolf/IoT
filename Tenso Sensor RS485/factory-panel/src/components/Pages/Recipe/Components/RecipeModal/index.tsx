@@ -1,10 +1,5 @@
 import { headCellsRecipeData, RecipeData } from '../../../../Data/Recipe'
-import {
-  FormProvider,
-  SubmitHandler,
-  useForm,
-  UseFormReturn,
-} from 'react-hook-form'
+import { FormProvider, SubmitHandler, UseFormReturn } from 'react-hook-form'
 import CustomButton from '../../../../UI/CustomButton/CustomButton'
 import { RecipeCard } from './RecipeCard'
 import CustomModal from '../../../../UI/Modal/CustomModal'
@@ -28,7 +23,7 @@ export const RecipeModal: React.FC<ModalProps> = ({
     // Extract numerical values from the data
     const numericalValues = Object.keys(data).reduce(
       (acc, key) => {
-        if (key !== 'name' && key !== 'components') {
+        if (key !== 'name' && key !== 'components' && key !== 'id') {
           const value = parseFloat(data[key as keyof RecipeData] as string)
 
           if (!isNaN(value)) {
@@ -43,6 +38,7 @@ export const RecipeModal: React.FC<ModalProps> = ({
 
     // Create the final formatted data object
     const formattedData: RecipeData = {
+      id: data.id,
       name: data.name,
       components: numericalValues,
     }
@@ -57,7 +53,9 @@ export const RecipeModal: React.FC<ModalProps> = ({
         <FormProvider {...formMethods}>
           <RecipeCard rows={headCellsRecipeData} />
           <CustomButton
-            buttonText="Створити Рецепт"
+            buttonText={
+              modalType == 'create' ? 'Створити рецепт' : 'Редагувати рецепт'
+            }
             sx={{ margin: '20px auto 0' }}
             type="submit"
             onClick={formMethods.handleSubmit(onSave)}

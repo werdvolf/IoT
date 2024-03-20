@@ -9,19 +9,19 @@ import { useForm } from 'react-hook-form'
 import { Row } from '../../Data/TableRows.ts'
 
 const Recipe = () => {
-  const [receiptData, setReceiptData] = useState([])
+  const [recipeData, setRecipeData] = useState([])
   const [modalType, setModalType] = useState<TModalType>(null)
 
   const methods = useForm<RecipeData>({ defaultValues: {} })
 
   useEffect(() => {
-    fetchReceipts()
+    fetchRecipes()
   }, [])
 
-  const fetchReceipts = async () => {
+  const fetchRecipes = async () => {
     try {
-      const responseData = await ApiService.getRequest('receipt/getAllReceipts')
-      setReceiptData(responseData.receipts)
+      const responseData = await ApiService.getRequest('recipe/getAllRecipes')
+      setRecipeData(responseData.recipes)
     } catch (err) {
       console.log(err)
     }
@@ -44,19 +44,30 @@ const Recipe = () => {
     setModalType('create')
   }
 
+  const handleDeleteAction = useCallback(async (row: Row) => {
+    try {
+      await ApiService.deleteRequest('recipe/deleteRecipeById/' + row.id)
+      fetchRecipes()
+    } catch (error) {
+      console.error('Error deleting recipe:', error)
+    }
+  }, [])
+
   const createOrEditRecipe = useCallback(
     async (recipe: RecipeData) => {
       try {
         if (modalType === 'create') {
-          await ApiService.postRequest('receipt/addReceipt', recipe)
+          await ApiService.postRequest('recipe/addRecipe', recipe)
         } else {
           // change by your own
-          await ApiService.postRequest('receipt/editReceipt', recipe)
+          console.log(recipe)
+
+          await ApiService.postRequest('recipe/updateRecipe', recipe)
         }
 
         handleModalClose()
 
-        fetchReceipts()
+        fetchRecipes()
       } catch (error) {
         console.error('Error creating recipe:', error)
       }
@@ -64,21 +75,21 @@ const Recipe = () => {
     [modalType],
   )
 
-  // Function to transform the receipt data for rendering
-  const transformReceiptDataForTable = (data: RecipeData[]): any[] => {
-    return data.map(receipt => {
-      const transformedReceipt: any = {
-        id: receipt.id,
-        name: receipt.name,
+  // Function to transform the recipe data for rendering
+  const transformRecipeDataForTable = (data: RecipeData[]): any[] => {
+    return data.map(recipe => {
+      const transformedRecipe: any = {
+        id: recipe.id,
+        name: recipe.name,
       }
-      receipt.components.forEach((component, index) => {
-        transformedReceipt[`component${index + 1}`] = component.amount
+      recipe.components.forEach((component, index) => {
+        transformedRecipe[`component${index + 1}`] = component.amount
       })
-      return transformedReceipt
+      return transformedRecipe
     })
   }
 
-  const transformedData = transformReceiptDataForTable(receiptData)
+  const transformedData = transformRecipeDataForTable(recipeData)
 
   return (
     <>
@@ -88,7 +99,7 @@ const Recipe = () => {
         rows={transformedData}
         addRowAction={handleAddAction}
         editRowAction={handleEditAction}
-        deleteRowAction={id => console.log(id)}
+        deleteRowAction={handleDeleteAction}
       />
       <RecipeModal
         formMethods={methods}

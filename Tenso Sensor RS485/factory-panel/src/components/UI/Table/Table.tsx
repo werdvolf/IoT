@@ -28,7 +28,7 @@ interface IProps {
   rows: Row[]
   addRowAction?: () => void
   editRowAction?: (row: Row) => void
-  deleteRowAction?: (id: number) => void
+  deleteRowAction?: (row: Row) => void
 }
 
 const CustomTable = ({
@@ -59,28 +59,23 @@ const CustomTable = ({
   )
 
   const renderRow = (row: Row, index: number) => {
+    console.log(row)
+
     const absoluteIndex = page * rowsPerPage + index + 1
 
     return (
-      <TableRow
-        key={absoluteIndex}
-        sx={{
-          '&:last-child td, &:last-child th': { border: 0 },
-        }}
-      >
+      <TableRow key={absoluteIndex} className={styles.lastChild}>
         <TableCell
+          className={styles.headCells}
           component="th"
           scope="row"
           key="ID"
-          sx={{
-            fontWeight: 'bold',
-          }}
         >
           {absoluteIndex}
         </TableCell>
 
         {isActionsPresent && (
-          <TableCell className={styles.actions}>
+          <TableCell align={'center'} className={styles.actions}>
             {!!editRowAction && (
               <CustomButton
                 buttonIcon={<EditIcon />}
@@ -91,7 +86,7 @@ const CustomTable = ({
             {!!deleteRowAction && (
               <CustomButton
                 buttonIcon={<DeleteIcon />}
-                onClick={() => deleteRowAction(row.id as number)}
+                onClick={() => deleteRowAction(row)}
               />
             )}
           </TableCell>
@@ -102,7 +97,6 @@ const CustomTable = ({
             key={headCell.id}
             align={headCell.numeric ? 'right' : 'center'}
             padding={headCell.disablePadding ? 'none' : 'normal'}
-            sx={{ whiteSpace: 'nowrap' }}
           >
             {headCell.id in row ? row[headCell.id as keyof Row] : ''}
           </TableCell>
@@ -112,74 +106,73 @@ const CustomTable = ({
   }
 
   return (
-    <TableContainer
-      component={Paper}
-      sx={{ maxHeight: '600px', overflow: 'auto' }}
-    >
-      <Box p={2}>
-        <Typography variant="h5" mb={2}>
-          {title}
-        </Typography>
-        {addRowAction && (
-          <CustomButton
-            buttonIcon={<AddIcon />}
-            buttonText="Додати"
-            type="submit"
-            onClick={addRowAction}
-          />
-        )}
-        {rows.length === 0 ? (
-          <Typography variant="body1" mt={2}>
-            Немає даних
+    <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+      <TableContainer
+        sx={{ maxHeight: '60vh', border: 'none' }}
+        component={Paper}
+        className={styles.TableContainer}
+      >
+        <Box p={2}>
+          <Typography variant="h5" mb={2}>
+            {title}
           </Typography>
-        ) : (
-          <Table sx={{ minWidth: 650 }} aria-label="table">
-            <TableHead>
-              <TableRow>
-                <TableCell
-                  sx={{
-                    fontWeight: 'bold',
-                  }}
-                >
-                  ID
-                </TableCell>
-
-                {isActionsPresent && <TableCell>Дії</TableCell>}
-
-                {headCells.map(headCell => (
-                  <TableCell
-                    key={headCell.id}
-                    align={headCell.numeric ? 'right' : 'center'}
-                    padding={headCell.disablePadding ? 'none' : 'normal'}
-                    sx={{ fontWeight: 'bold' }}
-                  >
-                    {headCell.label}
-                  </TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {(rowsPerPage > 0
-                ? rows.slice(
-                    page * rowsPerPage,
-                    page * rowsPerPage + rowsPerPage,
-                  )
-                : rows
-              ).map((row, index) => renderRow(row, index))}
-            </TableBody>
-          </Table>
-        )}
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
-          component="div"
-          count={rows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-      </Box>
-    </TableContainer>
+          {addRowAction && (
+            <CustomButton
+              buttonIcon={<AddIcon />}
+              buttonText="Додати"
+              type="submit"
+              onClick={addRowAction}
+            />
+          )}
+          {rows.length === 0 ? (
+            <Typography variant="h5" className={styles.noData} mt={2}>
+              Немає даних
+            </Typography>
+          ) : (
+            <Table stickyHeader className={styles.table} aria-label="table">
+              <TableHead>
+                <TableRow>
+                  <TableCell className={styles.headCells}>ID</TableCell>
+                  {isActionsPresent && (
+                    <TableCell align={'center'} className={styles.headCells}>
+                      Дії
+                    </TableCell>
+                  )}
+                  {headCells.map(headCell => (
+                    <TableCell
+                      className={styles.headCells}
+                      key={headCell.id}
+                      align={headCell.numeric ? 'right' : 'center'}
+                      padding={headCell.disablePadding ? 'none' : 'normal'}
+                    >
+                      {headCell.label}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {(rowsPerPage > 0
+                  ? rows.slice(
+                      page * rowsPerPage,
+                      page * rowsPerPage + rowsPerPage,
+                    )
+                  : rows
+                ).map((row, index) => renderRow(row, index))}
+              </TableBody>
+            </Table>
+          )}
+        </Box>
+      </TableContainer>
+      <TablePagination
+        rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
+        component="div"
+        count={rows.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
+    </Paper>
   )
 }
 

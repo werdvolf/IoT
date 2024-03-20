@@ -6,7 +6,7 @@ import Report, {
   setReportEndTimeById,
 } from '../models/Report'
 
-import { getReceiptById } from '../models/Receipt'
+import { getRecipeById } from '../models/Recipe'
 
 import {
   ValidationError,
@@ -20,11 +20,9 @@ class ReportService {
       if (!receiptId) {
         throw new ValidationError('Invalid report id input')
       } else {
-        const receipt = await getReceiptById(receiptId)
+        const receipt = await getRecipeById(receiptId)
         if (!receipt) {
-          const error = new DatabaseError(
-            `No such report with id ${receiptId}`
-          )
+          const error = new DatabaseError(`No such report with id ${receiptId}`)
           throw error
         }
       }

@@ -1,3 +1,26 @@
 .actions {
-    dislay: flex
+}
+
+.headCells {
+  font-weight: bold;
+}
+
+.noData {
+  align-items: center;
+  text-align: center;
+}
+
+.lastChild {
+  &:last-child td,
+  &:last-child th {
+    border: 0;
+  }
+}
+
+.tableContainer {
+  max-height: 300px; /* Adjust the maximum height as needed */
+}
+
+.table {
+  overflow-y: auto;
 }

@@ -1,17 +1,17 @@
 import sqlite3 from 'sqlite3'
 
 class Report {
-  receiptId: number
+  recipeId: number
   startTime: string
   endTime?: string
   id?: number
   constructor(
-    receiptId: number,
+    recipeId: number,
     startTime: string,
     endTime?: string,
     id?: number
   ) {
-    this.receiptId = receiptId
+    this.recipeId = recipeId
     this.startTime = startTime
     this.endTime = endTime
     this.id = id
@@ -21,8 +21,8 @@ class Report {
 export async function saveReportToDatabase(report: Report): Promise<void> {
   const db = new sqlite3.Database('database.db')
 
-  const query = 'INSERT INTO reports (receiptId, startTime) VALUES (?, ?)'
-  const values = [report.receiptId, report.startTime]
+  const query = 'INSERT INTO reports (recipeId, startTime) VALUES (?, ?)'
+  const values = [report.recipeId, report.startTime]
 
   try {
     await new Promise<void>((resolve, reject) => {
@@ -35,7 +35,7 @@ export async function saveReportToDatabase(report: Report): Promise<void> {
       })
     })
   } catch (error) {
-    console.error('Error saving alert to database:', error)
+    console.error('Error saving report to database:', error)
     throw error
   } finally {
     db.close()
@@ -56,7 +56,7 @@ export async function getReportById(id: number): Promise<Report | null> {
         (
           err,
           row: {
-            receiptId: number
+            recipeId: number
             startTime: string
             endTime: string
             id: number
@@ -68,7 +68,7 @@ export async function getReportById(id: number): Promise<Report | null> {
             resolve(null) // No matching report found
           } else {
             const report = new Report(
-              row.receiptId,
+              row.recipeId,
               row.startTime,
               row.endTime,
               row.id
@@ -79,7 +79,7 @@ export async function getReportById(id: number): Promise<Report | null> {
       )
     })
   } catch (error) {
-    console.error('Error getting receipt by ID from database:', error)
+    console.error('Error getting report by ID from database:', error)
     throw error
   } finally {
     db.close()
@@ -97,10 +97,10 @@ export async function getAllReports(): Promise<Report[]> {
         if (err) {
           reject(err)
         } else {
-          const receipts: Report[] = rows.map((row: any) => {
-            return new Report(row.receiptId, row.startTime, row.endTime, row.id)
+          const recipes: Report[] = rows.map((row: any) => {
+            return new Report(row.recipeId, row.startTime, row.endTime, row.id)
           })
-          resolve(receipts)
+          resolve(recipes)
         }
       })
     })
@@ -181,13 +181,13 @@ export default Report
 // const db = new sqlite3.Database('database.db')
 
 // const createReportsTableQuery = `
-//   CREATE TABLE IF NOT EXISTS reports (
-//     id INTEGER PRIMARY KEY AUTOINCREMENT,
-//     receiptId INTEGER,
-//     startTime TEXT NOT NULL,
-//     endTime,
-//     FOREIGN KEY (receiptId) REFERENCES receipts(id)
-//   );
+// CREATE TABLE IF NOT EXISTS reports (
+//   id INTEGER PRIMARY KEY AUTOINCREMENT,
+//   recipeId INTEGER,
+//   startTime TEXT NOT NULL,
+//   endTime,
+//   FOREIGN KEY (recipeId) REFERENCES recipes(id)
+// );
 // `
 
 // // Enable foreign key constraints
